@@ -1,0 +1,36 @@
+let CellType = {
+	empty: "empty",
+	mashroom: "mashroom",
+	tree: "tree",
+	efri: "efri",
+	home: "home"
+};
+
+let CommandType = {
+	front: "front",
+	left: "left",
+	right: "right"
+};
+
+let games = [
+	{
+		board: [
+			[CellType.empty,CellType.empty,CellType.empty,CellType.home,CellType.empty],
+			[CellType.empty,CellType.empty,CellType.empty,CellType.empty,CellType.empty],
+			[CellType.empty,CellType.empty,CellType.empty,CellType.empty,CellType.empty],
+			[CellType.empty,CellType.empty,CellType.empty,CellType.efri,CellType.empty],
+			[CellType.empty,CellType.empty,CellType.empty,CellType.empty,CellType.empty]
+		],
+		solution: [CommandType.front,CommandType.front,CommandType.front]
+	},
+	{
+		board: [
+			[CellType.empty,CellType.empty,CellType.tree,CellType.empty,CellType.empty],
+			[CellType.empty,CellType.tree,CellType.mashroom,CellType.home,CellType.empty],
+			[CellType.tree,CellType.mashroom,CellType.empty,CellType.tree,CellType.empty],
+			[CellType.efri,CellType.empty,CellType.tree,CellType.empty,CellType.empty],
+			[CellType.empty,CellType.empty,CellType.empty,CellType.empty,CellType.empty]
+		],
+		solution: [CommandType.left,CommandType.front,CommandType.right,CommandType.front,CommandType.left,CommandType.front,CommandType.right,CommandType.front,CommandType.left,CommandType.front]
+	}
+];

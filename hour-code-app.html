@@ -1,0 +1,839 @@
+<html>
+<head>
+<meta charset="utf-8">
+<script src="games.js"></script>
+
+<style>
+
+html, body{
+	margin: 0px;
+	font-family: system-ui;
+}
+
+body{
+	background-image: url("bg.png");
+	background-size: cover;
+    background-position: bottom;
+	text-align: center;
+}
+
+
+.title{
+	font-size: 5rem;
+	text-align: center;
+    color: #ffad47;
+    font-family: system-ui;
+    font-weight: 700;
+    text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #fff, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    margin-bottom: 10px;
+}
+
+.game-container{
+    background: white;
+    border-radius: 10px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.board-and-code-container{
+	display: inline-flex;
+    width: 100%;
+}
+
+.board-container{
+    display: flex;
+    margin: 0 auto;
+    width: 30rem;
+    justify-content: center;
+	padding: 20px;
+	flex: 1;
+	flex-direction: column;
+}
+
+.board{
+	border-collapse: collapse;
+}
+
+.board td{
+	border: 1px solid gray;
+}
+
+.board td { 
+	border: 0.2rem solid #000000;
+    background: #ceebf2;
+}
+
+.board td div{
+	width: 5rem;
+    height: 5rem;
+	margin: 0 auto;
+}
+
+.board td.cell-tree div{
+	background-image: url("tree.png");
+	background-size: 100%;
+	background-position: center;
+}
+
+.board td.cell-mashroom div{
+	background-image: url("mashroom.png");
+	background-size: 100%;
+	background-position: center;
+}
+
+.board td.cell-efri div{
+	background-image: url("efri.png");
+	background-size: 100%;
+	background-position: center;
+}
+
+.board td.cell-home div{
+	background-image: url("home.png");
+	background-size: 100%;
+	background-position: center;
+}
+
+.board td.cell-loose div{
+	background-image: url("explosion.png");
+	background-size: 100%;
+	background-position: center;
+}
+
+.code-container{
+	flex: 1;
+    margin: 20px;
+    background: #e3e3e3;
+	text-align: right;
+    padding: 20px;
+    color: #383838;
+	font-size: 1.5rem;
+}
+
+.code-container div{
+	margin-bottom: 0.5rem;
+}
+
+.code-container div.playing{
+	color: orange;
+    font-weight: 700;
+}
+
+.commands{
+	display: flex;
+	flex-direction: column;
+	background: #dcf4ff;
+	margin-top: 20px;
+}
+
+.command-container{
+    display: flex;
+    padding: 20px;
+}
+
+.command-cell{
+	width: 5rem;
+	height: 5rem;
+	border: 0.2rem solid #3957a9;
+	margin-right: 5px;
+	background: white;
+}
+
+.command-cell.active-command{
+	border-color: red;
+}
+
+.command-options{
+	justify-content: center;
+	padding-bottom: 20px;
+	display: flex;
+	flex-direction: row;
+}
+
+.command-options .command-cell{
+	width: 5rem;
+	height: 5rem;
+}
+
+.clear-button{
+	width: 4rem;
+    height: 4rem;
+    background-color: transparent;
+    background-image: url(clear.png);
+    background-size: 100%;
+    border: 0px;
+    cursor: pointer;
+	margin-right: 10px;
+}
+
+.play-button{
+	width: 4rem;
+    height: 4rem;
+    background-color: transparent;
+    background-image: url(play.png);
+    background-size: 100%;
+    border: 0px;
+    cursor: pointer;
+}
+
+.command-front{
+	background-image: url(front.png);
+	background-size: 100%;
+    background-position: center;
+}
+
+.command-left{
+	background-image: url(left.png);
+	background-size: 100%;
+    background-position: center;
+}
+
+.command-right{
+	background-image: url(right.png);
+	background-size: 100%;
+    background-position: center;
+}
+
+.rotate-left div{
+	transform: rotate(270deg);
+}
+
+.rotate-down  div{
+	transform: rotate(180deg);
+}
+
+.rotate-right div{
+	transform: rotate(90deg);
+}
+
+.dialog{
+	position: fixed;
+	display: none;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	justify-items: center;
+    align-items: center;
+}
+
+.dialog .dialog-wrapper{
+	display: flex;
+	flex-direction: column;
+	background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 5px grey;
+    padding: 20px;
+	align-items: center;
+}
+
+.dialog#win-message .dialog-wrapper{
+	border: 10px solid #4bdd2b52;
+}
+
+.dialog#loose-message .dialog-wrapper{
+	border: 10px solid #dd2b2b52;
+}
+
+.white-space{
+	flex: 1;
+}
+
+.dialog .message-container{
+	display: flex;
+    align-items: center;
+    font-size: 2rem;
+	margin-bottom: 10px;
+    border-bottom: 1px solid #e3e0e0
+}
+
+.dialog .dialog-wrapper button{
+    background: #00bd00;
+    border: 0px;
+    padding: 5px 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    color: white;
+    box-shadow: 0px 0px 3px black;
+}
+
+.dialog .message-container img{
+    margin-right: 40px;
+}
+
+.level-selection{
+	text-align: right;
+    margin-bottom: 10px;
+    font-size: 2rem;
+	display: flex;
+    width: 100%;
+	height: 2rem;
+    margin: 10px 0px;
+}
+
+.level-selection *{
+	align-self: center;
+}
+
+.level-selection span{
+	color: #3f8fb5;
+}
+
+.level-selection select{
+	height: 1.5rem;
+    width: 100px;
+    font-size: 1.2rem;
+	margin-top: 5px;
+	margin-right: 10px;
+}
+
+.level-selection button{
+	background: #00bd00;
+    border: 0px;
+    padding: 5px 10px;
+    font-size: 1rem;
+    color: white;
+    box-shadow: 0px 0px 3px black;
+	margin-right: 1rem;
+}
+
+</style>
+<script>
+
+const numOfRows = 5;
+const numOfCells = 5;
+const numOfCommands = 10;
+let game = null;
+let activeCommandCell = 0;
+let efriPos = null;
+
+const commandTypesClassesList = Object.keys(CommandType).map(t => "command-" + t);
+
+window.addEventListener('load', (event) => {
+	loadGame(0);
+});
+
+function clearGame(){
+	// clear board
+	for(let i = 0; i < numOfRows; i++){
+		for(let j = 0; j < numOfCells; j++){
+			document.getElementById("board-cell-" + i + "-" + j).className  = "";
+		}
+	}
+	
+	// clear commands
+	for(let i = 0; i < numOfCommands; i++){
+		document.getElementById("command-cell-" + i).classList.remove("command-right");
+		document.getElementById("command-cell-" + i).classList.remove("command-front");
+		document.getElementById("command-cell-" + i).classList.remove("command-left");
+	}
+	
+	// clear code
+	const codeContainerElm = document.getElementById("code-container");
+	codeContainerElm.innerHTML = "";
+	
+	activeCommandCell = 0;
+}
+
+function reloadGame(){
+	game.board.forEach((row, i) => {
+		row.forEach((cell, j) => {
+			let className = "cell-" + cell.type;
+			const cellElm = document.getElementById("board-cell-" + i + "-" + j);
+			cellElm.classList.add(className);
+			if(cell.direction){
+				cellElm.classList.add("rotate-" + cell.direction);
+			}			
+		});
+	});
+	efriPos = game.efriPos;
+	setActiveCommandCell(0);
+}
+
+function loadGame(level){
+	game = games[level];
+	reloadGame();
+}
+
+function addCommand(commandType){
+	const commandElm = getCommandElm(activeCommandCell);
+	
+	if(activeCommandCell == numOfCommands - 1){
+		if(removeCommand(commandElm)){
+			removeLastCommandCode();
+		}
+	}
+	
+	addCommandCode(commandType);
+	addClass(commandElm, "command-" + commandType);
+	if(activeCommandCell < numOfCommands - 1){
+		setActiveCommandCell(activeCommandCell + 1);
+	}
+	
+}
+
+function removeLastCommand(){
+	let activeElm = getCommandElm(activeCommandCell);
+	let activeCommandType = getCommandTypeFromElm(activeElm);
+	if(activeCommandType){
+		removeCommand(activeElm);
+	}
+	else if(activeCommandCell > 0){
+		setActiveCommandCell(activeCommandCell - 1);
+		removeCommand(getCommandElm(activeCommandCell));
+	}
+	removeLastCommandCode();
+}
+
+function removeCommand(elm){
+	let currentCommand = getCommandTypeFromElm(elm);
+	if(currentCommand){
+		removeClass(elm, currentCommand);
+		return true;
+	}
+	return false;
+}
+
+function getCommandElm(index){
+	return document.getElementById("command-cell-" + index);
+}
+
+function getCommandTypeFromElm(elm){
+	const classList = elm.classList;
+	return commandTypesClassesList.find(commandType => classList.contains(commandType));
+}
+
+function removeClass(elm, className){
+	elm.classList.remove(className);
+}
+
+
+function addClass(elm, className){
+	elm.classList.add(className);
+}
+
+function hasClass(elm, className){
+	return elm.classList.contains(className);
+}
+
+function setActiveCommandCell(index){
+	for(let i = 0; i < numOfCommands; i++){
+		removeClass(getCommandElm(i), "active-command");
+	}
+	activeCommandCell = index;
+	addClass(getCommandElm(index), "active-command");
+}
+
+async function play(){
+	let commands = [];
+	for(let i = 0; i <= activeCommandCell; i++){
+		let commandType = getCommandTypeFromElm(getCommandElm(i));
+		if(commandType){
+			commands.push(commandType.split("-")[1]);
+		}
+	}
+	
+	let moveToNextCommand = true;
+	let i = 0;
+	
+	while(i < commands.length && moveToNextCommand){
+		await sleep(1000);
+		let command = commands[i];
+		setPlayingCommandCode(i);
+		switch(command){
+			case "right":
+			moveToNextCommand = turnRight();
+			break;
+			case "left":
+			moveToNextCommand = turnLeft();
+			break;
+			case "front":
+			moveToNextCommand = moveFront();
+			break;
+		}
+		i++;
+		if(!moveToNextCommand){
+			showLoose(true);
+		}
+		else if(i == commands.length){
+			if(isWinPosition()){
+				showWin();
+			}
+			else{
+				showLoose(false);
+			}
+		}
+	}
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function turnLeft(){
+	let currentDirection = getCurrentDirection();
+	let nextDirection = getNextTurnDirectionLeft(currentDirection ? currentDirection : "");
+	if(currentDirection){
+		removeDirectionClass();
+	}
+	if(nextDirection){
+		addClass(getGridElm(efriPos[0], efriPos[1]), nextDirection);
+	}
+	playSounds('turn-sound.wav');
+	return true;
+}
+
+function turnRight(){
+	let currentDirection = getCurrentDirection();
+	let nextDirection = getNextTurnDirectionRight(currentDirection ? currentDirection : "");
+	if(currentDirection){
+		removeDirectionClass();
+	}
+	if(nextDirection){
+		addClass(getGridElm(efriPos[0], efriPos[1]), nextDirection);
+	}
+	playSounds('turn-sound.wav');
+	return true;
+}
+
+function moveFront(){
+	let currentDirection = getCurrentDirection() || "";
+	let currentRow = efriPos[0];
+	let currentCell = efriPos[1];
+	
+	const nextEfriPos = getNextFrontPosition(currentRow, currentCell, currentDirection);
+	let nextRow = nextEfriPos[0];
+	let nextCell = nextEfriPos[1];
+	
+	if(isValidGridPositionForEfri(nextRow, nextCell)){
+		removeClass(getGridElm(currentRow, currentCell), "cell-" + CellType.efri);
+		addClass(getGridElm(currentRow, currentCell), "cell-" + CellType.empty);
+		removeClass(getGridElm(nextRow, nextCell), "cell-" + CellType.mashroom);
+		removeClass(getGridElm(nextRow, nextCell), "cell-" + CellType.home);
+		addClass(getGridElm(nextRow, nextCell), "cell-" + CellType.efri);
+		
+		if(currentDirection){
+			removeClass(getGridElm(currentRow, currentCell), currentDirection);
+			addClass(getGridElm(nextRow, nextCell), currentDirection);
+		}
+		efriPos = [nextRow, nextCell];
+		playSounds('turn-sound.wav');
+		return true;
+	}
+	else{
+		//showLoose();
+		return false;
+	}
+}
+
+function getNextFrontPosition(currentRow, currentCell, direction){
+	let nextRow = currentRow;
+	let nextCell = currentCell;
+	switch(direction){
+		case "":
+			nextRow = currentRow - 1;
+			break;
+		case "rotate-left":
+			nextCell = currentCell - 1;
+			break;
+		case "rotate-right":
+			nextCell = currentCell + 1;
+			break;
+		case "rotate-down":
+			nextRow = currentRow + 1;
+			break;
+	}
+	return [nextRow, nextCell]
+}
+
+function isValidGridPositionForEfri(row, cell){
+	let validIndeces = validPosInGrid(row, cell);
+	if(validIndeces){
+		const elm = getGridElm(row, cell);
+		let cellContent = Object.keys(CellType).map(cellType => "cell-" + cellType).find(item => elm.classList.contains(item));
+		if(cellContent != "cell-" + CellType.empty && cellContent != "cell-" + CellType.mashroom && cellContent != "cell-" + CellType.home){
+			return false;
+		}
+		return true;
+	}
+	return false;
+}
+
+function isWinPosition(){
+	const isValidHome =  validPosInGrid(efriPos[0], efriPos[1]) && game.board[efriPos[0]][efriPos[1]].type == CellType.home;
+	let hasMashrooms = false;
+	for(let row = 0; row < numOfRows && !hasMashrooms; row++){
+		for(let cell = 0; cell < numOfCells && !hasMashrooms; cell++){
+			if(hasClass(getGridElm(row, cell), "cell-mashroom")){
+				hasMashrooms = true;
+			}
+		}
+	}
+	
+	return isValidHome && !hasMashrooms;
+	/*
+	let currentDirection = getCurrentDirection() || "";
+	const homePos = getNextFrontPosition(efriPos[0], efriPos[1], currentDirection);
+	let validHomePos = validPosInGrid(homePos[0], homePos[1]);
+	if(!validHomePos){
+		return false;
+	}
+	for(let row = 0; row < numOfRows; row++){
+		for(let cell = 0; cell < numOfCells; cell++){
+			if(hasClass(getGridElm(row, cell), "cell-mashroom")){
+				return false;
+			}
+		}
+	}
+	const homeElm = getGridElm(homePos[0], homePos[1]);
+	if(homeElm){
+		return hasClass(homeElm, "cell-" + CellType.home);
+	}
+	return false;
+	*/
+}
+
+function validPosInGrid(row, cell){
+	return row >= 0 && cell >= 0 && cell < numOfRows && row < numOfCells;
+}
+
+function getCurrentDirection(){
+	let efriCell = getGridElm(efriPos[0], efriPos[1]);
+	let allDirectionClasses = ["rotate-left", "rotate-right", "rotate-down"];
+	return allDirectionClasses.find(cssClass => efriCell.classList.contains(cssClass))
+}
+
+function getNextTurnDirectionLeft(direction){
+	switch(direction){
+		case "rotate-left":
+			return "rotate-down";
+		case "rotate-right":
+			return "";
+		case "rotate-down":
+			return "rotate-right";
+		case "":
+			return "rotate-left";
+	}
+}
+
+function getNextTurnDirectionRight(direction){
+	switch(direction){
+		case "rotate-left":
+			return "";
+		case "rotate-right":
+			return "rotate-down";
+		case "rotate-down":
+			return "rotate-left";
+		case "":
+			return "rotate-right";
+	}
+}
+
+
+function removeDirectionClass(){
+	let efriCell = getGridElm(efriPos[0], efriPos[1]);
+	let currentDirection = getCurrentDirection();
+	if(currentDirection){
+		removeClass(efriCell, currentDirection);
+	}
+	
+}
+
+function getGridElm(row, cell){
+	return document.getElementById("board-cell-" + row + "-" + cell);
+}
+
+function closeDialog(){
+	document.getElementById("loose-message").style.display = "none";
+	document.getElementById("win-message").style.display = "none";
+}
+
+function tryAgain(){
+	
+	clearGame();
+	reloadGame();
+}
+
+async function showLoose(showExplosionNextCell){
+	await sleep(500);
+	let currentDirection = getCurrentDirection() || "";
+	if(showExplosionNextCell){
+		const nextPos = getNextFrontPosition(efriPos[0], efriPos[1], currentDirection);
+		if(validPosInGrid(nextPos[0], nextPos[1])){
+			addClass(getGridElm(nextPos[0], nextPos[1]), "cell-loose");
+		}
+	}
+	playSounds('mixkit-losing-drums-2023.wav');
+	document.getElementById("loose-message").style.display = "flex";
+}
+
+async function showWin(){
+	await sleep(500);
+	playSounds('win-sound.mp3');
+	document.getElementById("win-message").style.display = "flex";
+}
+
+function selectLevel(){
+	let selectedLevel = document.getElementById("level-selection").value;
+	const level = parseInt(selectedLevel);
+	clearGame();
+	loadGame(level);
+}
+
+function syncCodeContainer(commands){
+	const codeContainerElm = document.getElementById("code-container");
+	codeContainerElm.innerHTML = "";
+	for(let i = 0; i < commands.length; i++){
+		let command = commands[i];
+		
+	}
+}
+
+function addCommandCode(commandType){
+	const codeContainerElm = document.getElementById("code-container");
+	let commandText = "";
+	switch(commandType){
+		case "right":
+		commandText = "()פנה-ימינה";
+		break;
+		case "left":
+		commandText = "()פנה-שמאלה";
+		break;
+		case "front":
+		commandText = "()לך-ישר";
+		break;
+	}
+	codeContainerElm.innerHTML += "<div id='commad-code-" + codeContainerElm.children.length + "'>" + commandText + "</div>";
+}
+
+function removeLastCommandCode(){
+	const codeContainerElm = document.getElementById("code-container");
+	if(codeContainerElm.children.length > 0){
+		codeContainerElm.children[codeContainerElm.children.length - 1].remove();
+	}
+}
+
+function replaceLastCommandCode(commandType){
+	removeLastCommandCode();
+	addCommandCode(commandType);
+}
+
+function setPlayingCommandCode(index){
+	const codeContainerElm = document.getElementById("code-container");
+	for(let i = 0; i < codeContainerElm.children.length; i++){
+		removeClass(codeContainerElm.children[i], "playing");
+	}
+	
+	addClass(codeContainerElm.children[index], "playing");
+}
+
+function setSolution(){
+	clearGame();
+	reloadGame();
+	for(let i = 0; i < game.solution.length; i++){
+		addCommand(game.solution[i]);
+	}
+}
+
+function playSounds(file){
+	var audio = new Audio(file);
+	audio.play();
+}
+</script>
+</head>
+<body>
+	<div class="title">אפרי ביער הקסום</div>
+	
+	<div class="game-container">
+		<div class="board-and-code-container">
+			<div class="board-container">
+				<div class="level-selection">
+					<button onclick="setSolution()">פיתרון</button>
+					<button onclick="tryAgain()">נסה שוב</button>
+					<div class="white-space"></div>
+					<select id="level-selection" onchange="selectLevel()">
+						<option>0</option>
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+						<option>6</option>
+					</select>
+					<span>:שלב</span>
+				</div>
+				<table class="board" cols="8" rows="8">
+					<tr>
+						<td id="board-cell-0-0"><div></div></td><td id="board-cell-0-1"><div></div></td><td id="board-cell-0-2"><div></div></td><td id="board-cell-0-3"><div></div></td><td id="board-cell-0-4"><div></div></td>
+					</tr>
+					<tr>
+						<td id="board-cell-1-0"><div></div></td><td id="board-cell-1-1"><div></div></td><td id="board-cell-1-2"><div></div></td><td id="board-cell-1-3"><div></div></td><td id="board-cell-1-4"><div></div></td>
+					</tr>
+					<tr>
+						<td id="board-cell-2-0"><div></div></td><td id="board-cell-2-1"><div></div></td><td id="board-cell-2-2"><div></div></td><td id="board-cell-2-3"><div></div></td><td id="board-cell-2-4"><div></div></td>
+					</tr>
+					<tr>
+						<td id="board-cell-3-0"><div></div></td><td id="board-cell-3-1"><div></div></td><td id="board-cell-3-2"><div></div></td><td id="board-cell-3-3"><div></div></td><td id="board-cell-3-4"><div></div></td>
+					</tr>
+					<tr>
+						<td id="board-cell-4-0"><div></div></td><td id="board-cell-4-1"><div></div></td><td id="board-cell-4-2"><div></div></td><td id="board-cell-4-3"><div></div></td><td id="board-cell-4-4"><div></div></td>
+					</tr>
+				</table>
+			</div>
+			<div id="code-container" class="code-container">
+			
+			</div>
+		</div>
+		<div class="commands">
+			<div class="command-container">
+				<div id="command-cell-0" class="command-cell"></div>
+				<div id="command-cell-1" class="command-cell"></div>
+				<div id="command-cell-2" class="command-cell"></div>
+				<div id="command-cell-3" class="command-cell"></div>
+				<div id="command-cell-4" class="command-cell"></div>
+				<div id="command-cell-5" class="command-cell"></div>
+				<div id="command-cell-6" class="command-cell"></div>
+				<div id="command-cell-7" class="command-cell"></div>
+				<div id="command-cell-8" class="command-cell"></div>
+				<div id="command-cell-9" class="command-cell"></div>
+				<button class="clear-button" onclick="removeLastCommand()"></button>
+				<button class="play-button" onclick="play()"></button>
+			</div>
+			<div class="command-options">
+				<div id="command-front" class="command-cell command-front" onclick=addCommand("front")></div>
+				<div id="command-left" class="command-cell command-left" onclick=addCommand("left")></div>
+				<div id="command-right" class="command-cell command-right" onclick=addCommand("right")></div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div id="loose-message" class="dialog">
+		<div class="white-space"></div>
+		<div class="dialog-wrapper">
+			<div class="message-container">
+				<img src="./loose.png"/>
+				<div>נָסוּ שׁוּב</div>
+			</div>
+			<div class="button-container">
+				<button onClick="closeDialog()">סגור</button>
+			</div>
+		</div>
+		<div class="white-space"></div>
+	</div>
+	
+	<div id="win-message" class="dialog">
+		<div class="white-space"></div>
+		<div class="dialog-wrapper">
+			<div class="message-container">
+				<img src="./win.png"/>
+				<div>הנִצַּחְתֶּם - כָּל הַכָּבוֹד!</div>
+			</div>
+			<div class="button-container">
+				<button onClick="closeDialog()">סגור</button>
+			</div>
+		</div>
+		<div class="white-space"></div>
+	</div>
+</body>
+</html>
